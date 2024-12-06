@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { db } = require('../database/database');
+const { db } = require('../services/database');
 const { predictClassification } = require('../services/inferenceService');
 
 async function postPredictHandler (request, h) {
@@ -18,7 +18,7 @@ async function postPredictHandler (request, h) {
             "createdAt": createdAt,
         }
     
-        db.collection('predictions').doc(id).set(data);
+        await db.collection('predictions').doc(id).set(data);
     
         return h.response({
             "status": "success",
