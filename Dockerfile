@@ -1,7 +1,7 @@
 FROM node:18.20.5
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+ENV PORT 5000
 COPY . .
-EXPOSE 8080
-CMD ["node", "./src/server.js"]
+RUN npm install
+EXPOSE 5000
+CMD [ "npm", "run", "start"]
