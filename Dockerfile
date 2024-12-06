@@ -1,7 +1,7 @@
-FROM node:18
+FROM node:18.20.5
 WORKDIR /app
-ENV HOST 0.0.0.0
+COPY package*.json ./
+RUN npm install
 COPY . .
-RUN npm install --only=prod
 EXPOSE 8080
-CMD ["npm", "run", "start"]
+CMD ["node", "./src/server.js"]
