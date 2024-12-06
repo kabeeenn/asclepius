@@ -9,4 +9,4 @@ async function loadModel() {
     }
 }
  
-module.exports = loadModel;
+module.exports = { loadModel };
