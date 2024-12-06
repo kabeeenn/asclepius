@@ -1,20 +1,14 @@
 const crypto = require('crypto');
+const { db } = require('../database/database');
+const { predictClassification } = require('../services/inferenceService');
 
 async function postPredictHandler (request, h) {
     const { image } = request.payload;
-
-    if (image.size > 1000000) {
-        return h.response({
-            "status": "fail",
-            "message": "Payload content length greater than maximum allowed: 1000000"
-         }).code(413);
-    }
-
     const { model } = request.server.app;
 
     try {
         const id = crypto.randomUUID();
-        const { result, suggestion } = await predict(image, model);
+        const { result, suggestion } = await predictClassification(image, model);
         const createdAt = new Date().toISOString();
     
         const data = {
@@ -49,8 +43,11 @@ async function getPredictHistoriesHandler (request, h) {
             "data": predictionsData,
         }).code(200);
     } catch (error) {
-        
+        return h.response({
+            "status": "fail",
+            "message": "Terjadi kesalahan dalam mengambil data prediksi"
+        }).code(500);
     }
 };
 
-module.exports = { postPredictHandler };
+module.exports = { postPredictHandler, getPredictHistoriesHandler };

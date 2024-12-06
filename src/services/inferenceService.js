@@ -1,21 +1,17 @@
 const tf = require('@tensorflow/tfjs-node');
-const { InputError } = require('../exceptions/inputError');
+const InputError = require('../exceptions/inputError');
 
 async function predictClassification(image, model) {
     try {
         // Convert image to tensor
         const tensor = tf.node
-            .decodeImage(image) 
-            .resizeNearestNeighbor([224, 224]) // Resize to width 224px, height 224px
-            .toFloat() // Convert to float values
-            .expandDims(); // Add batch dimension
+            .decodeImage(image)
+            .resizeNearestNeighbor([224, 224])
+            .toFloat()
+            .expandDims()
 
-        // Check if the image is in RGB format
-        if (tensor.shape[3] !== 3) {
-            throw new Error('Input image is not in RGB format');
-        }
-
-        const prediction = await model.predict(tensor).data();
+        const predict = model.predict(tensor)
+        const prediction = await predict.data();
         const score = prediction[0];
         
         if (score <= 0.5) {
@@ -32,7 +28,7 @@ async function predictClassification(image, model) {
             };
         }
 
-        return { result: "Unknown", suggestion: "Tidak dapat menentukan hasil." };
+        return { result, suggestion};
     } catch (error) {
         throw new InputError(`Terjadi kesalahan input: ${error.message}`);
     }    

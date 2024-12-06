@@ -1,5 +1,4 @@
-const { postPredictHandler } = require('./api/handlers');
-const Joi = require('@hapi/joi');
+const { postPredictHandler, getPredictHistoriesHandler } = require('./handlers');
 
 const routes = [
     {
@@ -8,15 +7,9 @@ const routes = [
         handler: postPredictHandler,
         options: {
             payload: {
-                output: 'stream', 
-                parse: true,
+                allow: 'multipart/form-data',
                 multipart: true,
-                maxBytes: 1000000, // Max 1MB (1000000 byte)
-            },
-            validate: {
-                payload: Joi.object({
-                    file: Joi.any().required(), 
-                }),
+                maxBytes: 1000000
             },
         },
     },
